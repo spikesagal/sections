@@ -799,14 +799,25 @@ body.mobile .AdSense {
     <b:else/>
       <ul>
         <b:loop values='data:links' var='link'>
-          <b:if cond='data:link.isCurrentPage'>
-            <li class='selected'><a expr:href='data:link.href'><data:link.title/></a></li>
+          <b:if cond='data:blog.pageTitle == data:blog.title + &quot;: &quot; + data:link.title'>
+            <li class='selected'><span><data:link.title/></span></li>
           <b:else/>
-            <li><a expr:href='data:link.href'><data:link.title/></a></li>
+            <li>
+              <b:if cond='data:link.title == &quot;home&quot;'>
+                <b:if cond='data:link.isCurrentPage'>
+                  <li class='selected'><span><data:link.title/></span></li>
+                <b:else/>
+                  <a expr:href='data:blog.homepageUrl'><data:link.title/></a>
+                </b:if>
+              <b:else/>
+                <a expr:href='&quot;/search/label/&quot;+data:link.title'><data:link.title/></a>
+              </b:if>
+            </li>
           </b:if>
         </b:loop>
       </ul>
     </b:if>
+
     <b:include name='quickedit'/>
   </div>
 </b:includable>
@@ -1070,6 +1081,7 @@ body.mobile .AdSense {
   </div>
 </b:includable>
 <b:includable id='status-message'>
+<!--
   <b:if cond='data:navMessage'>
   <div class='status-msg-wrap'>
     <div class='status-msg-body'>
@@ -1083,6 +1095,7 @@ body.mobile .AdSense {
   </div>
   <div style='clear: both;'/>
   </b:if>
+-->
 </b:includable>
 <b:includable id='comment-form' var='post'>
   <div class='comment-form'>
@@ -1249,43 +1262,29 @@ body.mobile .AdSense {
 
       <data:defaultAdStart/>
       <b:loop values='data:posts' var='post'>
-        <b:if cond='data:post.isDateStart'>
-          <b:if cond='data:post.isFirstPost == &quot;false&quot;'>
-            &lt;/div&gt;&lt;/div&gt;
-          </b:if>
+
+      <b:if cond='data:blog.pageType == &quot;item&quot;'>
+        <b:include data='post' name='valid-post'/>
+      <b:else/>
+
+        <b:if cond='data:post.labels'>
+          <b:loop values='data:post.labels' var='label'>
+
+            <b:if cond='data:blog.url == data:label.url'>
+              <b:include data='post' name='valid-post'/>
+            </b:if>
+            <b:if cond='data:blog.url == data:blog.homepageUrl'>
+              <b:if cond='data:label.name == &quot;home&quot;'>
+                <b:include data='post' name='valid-post'/>
+              </b:if> 
+            </b:if>
+
+          </b:loop>
         </b:if>
-        <b:if cond='data:post.isDateStart'>
-          &lt;div class=&quot;date-outer&quot;&gt;
-        </b:if>
-        <b:if cond='data:post.dateHeader'>
-          <h2 class='date-header'><span><data:post.dateHeader/></span></h2>
-        </b:if>
-        <b:if cond='data:post.isDateStart'>
-          &lt;div class=&quot;date-posts&quot;&gt;
-        </b:if>
-        <div class='post-outer'>
-        <b:include data='post' name='post'/>
-        <b:if cond='data:blog.pageType == &quot;static_page&quot;'>
-          <b:include data='post' name='comments'/>
-        </b:if>
-        <b:if cond='data:blog.pageType == &quot;item&quot;'>
-          <b:include data='post' name='comments'/>
-        </b:if>
-        </div>
-        <b:if cond='data:post.includeAd'>
-          <b:if cond='data:post.isFirstPost'>
-            <data:defaultAdEnd/>
-          <b:else/>
-            <data:adEnd/>
-          </b:if>
-          <div class='inline-ad'>
-            <data:adCode/>
-          </div>
-          <data:adStart/>
-        </b:if>
-        <b:if cond='data:post.trackLatency'>
-          <data:post.latencyJs/>
-        </b:if>
+
+      </b:if>
+
+      <!-- end post -->
       </b:loop>
       <b:if cond='data:numPosts != 0'>
         &lt;/div&gt;&lt;/div&gt;
@@ -1399,11 +1398,50 @@ body.mobile .AdSense {
     </div>
   </div>
 </b:includable>
+<b:includable id='valid-post' var='post'>
+        <b:if cond='data:post.isDateStart'>
+          <b:if cond='data:post.isFirstPost == &quot;false&quot;'>
+            &lt;/div&gt;&lt;/div&gt;
+          </b:if>
+        </b:if>
+        <b:if cond='data:post.isDateStart'>
+          &lt;div class=&quot;date-outer&quot;&gt;
+        </b:if>
+        <b:if cond='data:post.dateHeader'>
+          <h2 class='date-header'><span><data:post.dateHeader/></span></h2>
+        </b:if>
+        <b:if cond='data:post.isDateStart'>
+          &lt;div class=&quot;date-posts&quot;&gt;
+        </b:if>
+        <div class='post-outer'>
+        <b:include data='post' name='post'/>
+        <b:if cond='data:blog.pageType == &quot;static_page&quot;'>
+          <b:include data='post' name='comments'/>
+        </b:if>
+        <b:if cond='data:blog.pageType == &quot;item&quot;'>
+          <b:include data='post' name='comments'/>
+        </b:if>
+        </div>
+        <b:if cond='data:post.includeAd'>
+          <b:if cond='data:post.isFirstPost'>
+            <data:defaultAdEnd/>
+          <b:else/>
+            <data:adEnd/>
+          </b:if>
+          <div class='inline-ad'>
+            <data:adCode/>
+          </div>
+          <data:adStart/>
+        </b:if>
+        <b:if cond='data:post.trackLatency'>
+          <data:post.latencyJs/>
+        </b:if>
+</b:includable>
 <b:includable id='feedLinksBody' var='links'>
   <div class='feed-links'>
   <data:feedLinksMsg/>
   <b:loop values='data:links' var='f'>
-     <a class='feed-link' expr:href='data:f.url' expr:type='data:f.mimeType' target='_blank'><data:f.name/> (<data:f.feedType/>)</a>
+     <a class='feed-link' expr:href='data:f.url + &quot;/-/home&quot;' expr:type='data:f.mimeType' target='_blank'><data:f.name/> (<data:f.feedType/>)</a>
   </b:loop>
   </div>
 </b:includable>
