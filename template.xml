@@ -1261,6 +1261,10 @@ body.mobile .AdSense {
       <b:include data='top' name='status-message'/>
 
       <data:defaultAdStart/>
+
+      <b:if cond='data:numPosts != 0'>
+        &lt;div&gt;&lt;div&gt;
+      </b:if>
       <b:loop values='data:posts' var='post'>
 
       <b:if cond='data:blog.pageType == &quot;item&quot;'>
@@ -1287,11 +1291,9 @@ body.mobile .AdSense {
       <!-- end post -->
       </b:loop>
 
-<!-- wtf is this?
       <b:if cond='data:numPosts != 0'>
         &lt;/div&gt;&lt;/div&gt;
       </b:if>
--->
 
       <data:adEnd/>
     </div>
@@ -1404,11 +1406,9 @@ body.mobile .AdSense {
 </b:includable>
 <b:includable id='valid-post' var='post'>
         <b:if cond='data:post.isDateStart'>
-          <b:if cond='data:post.isFirstPost == &quot;false&quot;'>
+<!--          <b:if cond='data:post.isFirstPost == &quot;false&quot;'> -->
             &lt;/div&gt;&lt;/div&gt;
-          </b:if>
-        </b:if>
-        <b:if cond='data:post.isDateStart'>
+<!--          </b:if> -->
           &lt;div class=&quot;date-outer&quot;&gt;
         </b:if>
         <b:if cond='data:post.dateHeader'>
