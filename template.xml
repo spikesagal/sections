@@ -1286,9 +1286,13 @@ body.mobile .AdSense {
 
       <!-- end post -->
       </b:loop>
+
+<!-- wtf is this?
       <b:if cond='data:numPosts != 0'>
         &lt;/div&gt;&lt;/div&gt;
       </b:if>
+-->
+
       <data:adEnd/>
     </div>
 
